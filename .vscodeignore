@@ -1,0 +1,19 @@
+# Everything the extension does not need at runtime. The Marketplace package
+# should be what VS Code loads — themes, the bundled Core, the preview adapter —
+# not the machinery used to produce them.
+node_modules/**
+package-lock.json
+.vscode-test/**
+.vscode-test-profile/**
+tests/**
+tools/**
+palettes/**
+docker-compose.yml
+.github/**
+.gitignore
+.vscodeignore
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+SECURITY.md
+version.json
+*.vsix

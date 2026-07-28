@@ -1,0 +1,70 @@
+/* =========================================================
+   JSRay · default theme
+   AUTO-GENERATED from tokens.json — do not edit by hand.
+   Run `node tools/generate-theme.mjs` after editing the palette.
+   ========================================================= */
+
+:root,
+[data-theme="dark"] {
+  --jr-bg:          #1C1C1E;
+  --jr-fg:          #E1E4E8;
+  --jr-border:      #2C2C2E;
+  --jr-gutter-fg:   #48484A;
+  --jr-line-hl:     rgba(255,255,255,0.05);
+
+  --jr-keyword:       #D08BFC;
+  --jr-function:      #4FBD92;
+  --jr-fn-decl:       #5DD8B0;
+  --jr-fn-builtin:    #C9A6F2;
+  --jr-var:           #E1E4E8;
+  --jr-var-param:     #F2B870;
+  --jr-var-builtin:   #7AB1FF;
+  --jr-var-const:     #E2C792;
+  --jr-type:          #5AC8FA;
+  --jr-property:      #FFB1B1;
+  --jr-string:        #FF9F89;
+  --jr-regex:         #FFCB6B;
+  --jr-number:        #C9D26B;
+  --jr-comment:       #6B7681;
+  --jr-doc:           #6B7681;
+  --jr-decorator:     #D9A35E;
+  --jr-operator:      #D1D1D6;
+  --jr-punct:         #636368;
+  --jr-tag:           #D08BFC;
+  --jr-attr:          #FFB1B1;
+  --jr-selector:      #4FBD92;
+  --jr-css-prop:      #FFB1B1;
+  --jr-css-unit:      #C9D26B;
+}
+
+[data-theme="light"] {
+  --jr-bg:          #FFFFFF;
+  --jr-fg:          #1C1C1E;
+  --jr-border:      #E5E5EA;
+  --jr-gutter-fg:   #8E8E93;
+  --jr-line-hl:     rgba(0,0,0,0.04);
+
+  --jr-keyword:       #AD3DA4;
+  --jr-function:      #1F7F66;
+  --jr-fn-decl:       #0F8568;
+  --jr-fn-builtin:    #7A40C2;
+  --jr-var:           #1C1C1E;
+  --jr-var-param:     #B25E00;
+  --jr-var-builtin:   #0F68A0;
+  --jr-var-const:     #88611E;
+  --jr-type:          #0070C9;
+  --jr-property:      #B23D6B;
+  --jr-string:        #D12F1B;
+  --jr-regex:         #B2762E;
+  --jr-number:        #1C00CF;
+  --jr-comment:       #6E7B89;
+  --jr-doc:           #6E7B89;
+  --jr-decorator:     #7F6E1A;
+  --jr-operator:      #3F3F46;
+  --jr-punct:         #A1A1AA;
+  --jr-tag:           #AD3DA4;
+  --jr-attr:          #B23D6B;
+  --jr-selector:      #1F7F66;
+  --jr-css-prop:      #B23D6B;
+  --jr-css-unit:      #1C00CF;
+}

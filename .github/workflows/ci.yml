@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test on Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ['18', '20', '22']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Validate version metadata
+        run: npm run check:versions
+      - name: Run tests
+        run: npm test
+      - name: Themes regenerate deterministically
+        run: |
+          npm run build
+          if ! git diff --quiet -- themes/; then
+            echo "::error::themes/ is out of sync with palettes/. Run 'npm run build' and commit."
+            git diff --stat -- themes/
+            exit 1
+          fi

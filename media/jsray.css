@@ -1,0 +1,92 @@
+/* =========================================================
+   JSRay · Core styles (structure only)
+   Containers, scrollbar, and the 23 token-class color bindings.
+   Palette values live in a separate theme stylesheet:
+     <link rel="stylesheet" href="dist/themes/default.css">
+   Ship a theme alongside this file or token colors will be empty.
+
+   Author:  Jie
+   License: MIT
+   ========================================================= */
+
+/* =========================================================
+   Code block container
+   ========================================================= */
+pre.jsray,
+pre[class*="language-"],
+pre:has(> code[class*="language-"]) {
+  display: block;
+  margin: 0;
+  padding: 20px 22px;
+  background: var(--jr-bg);
+  color: var(--jr-fg);
+  border-radius: 10px;
+  overflow-x: auto;
+  font: 13px/1.65 "SF Mono", ui-monospace, "JetBrains Mono",
+        Menlo, Consolas, monospace;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  tab-size: 2;
+  font-variant-ligatures: contextual;
+}
+pre.jsray code,
+pre[class*="language-"] code {
+  display: block;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  padding: 0;
+}
+
+/* Inline code */
+:not(pre) > code.jsray,
+:not(pre) > code[class*="language-"] {
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  background: var(--jr-line-hl);
+  font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  font-size: 0.92em;
+}
+
+/* Scrollbar (more restrained in dark mode) */
+pre.jsray::-webkit-scrollbar,
+pre[class*="language-"]::-webkit-scrollbar { height: 8px; width: 8px; }
+pre.jsray::-webkit-scrollbar-thumb,
+pre[class*="language-"]::-webkit-scrollbar-thumb {
+  background: var(--jr-border); border-radius: 4px;
+}
+
+/* =========================================================
+   Token classes · one-to-one with tokens.json
+   ========================================================= */
+.tk-keyword     { color: var(--jr-keyword);     font-weight: 700; }
+.tk-function    { color: var(--jr-function); }
+.tk-fn-decl     { color: var(--jr-fn-decl);     font-weight: 700; }
+.tk-fn-builtin  { color: var(--jr-fn-builtin); }
+.tk-var         { color: var(--jr-var); }
+.tk-var-param   { color: var(--jr-var-param);   font-style: italic; }
+.tk-var-builtin { color: var(--jr-var-builtin); font-weight: 600; }
+.tk-var-const   { color: var(--jr-var-const); }
+.tk-type        { color: var(--jr-type); }
+.tk-property    { color: var(--jr-property); }
+.tk-string      { color: var(--jr-string); }
+.tk-regex       { color: var(--jr-regex); }
+.tk-number      { color: var(--jr-number); }
+.tk-comment     { color: var(--jr-comment);     font-style: italic; }
+.tk-doc         { color: var(--jr-doc);         font-style: italic; }
+.tk-decorator   { color: var(--jr-decorator); }
+.tk-operator    { color: var(--jr-operator); }
+.tk-punct       { color: var(--jr-punct); }
+.tk-tag         { color: var(--jr-tag); }
+.tk-attr        { color: var(--jr-attr); }
+.tk-selector    { color: var(--jr-selector); }
+.tk-css-prop    { color: var(--jr-css-prop); }
+.tk-css-unit    { color: var(--jr-css-unit); }
+
+/* Markdown-specific */
+.tk-md-heading  { color: var(--jr-keyword);     font-weight: 700; }
+.tk-md-bold     { color: var(--jr-fg);          font-weight: 700; }
+.tk-md-italic   { color: var(--jr-fg);          font-style: italic; }
+.tk-md-link     { color: var(--jr-number); }
+.tk-md-code     { color: var(--jr-regex); }
+.tk-md-list     { color: var(--jr-decorator); }

@@ -1,0 +1,125 @@
+{
+  "name": "jsray-vscode",
+  "displayName": "JSRay",
+  "description": "JSRay code rendering for VS Code: 8 color themes with six-family identifier separation, plus JSRay-powered Markdown preview highlighting.",
+  "version": "0.0.1-internal.2",
+  "publisher": "jsray",
+  "author": "Jie <jie@jsray.org>",
+  "license": "MIT",
+  "homepage": "https://jsray.org",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JSRayCore/jsray-vscode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JSRayCore/jsray-vscode/issues"
+  },
+  "private": true,
+  "icon": "media/icon.png",
+  "main": "./extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "engines": {
+    "vscode": "^1.75.0",
+    "node": ">=18"
+  },
+  "categories": [
+    "Themes",
+    "Other"
+  ],
+  "keywords": [
+    "jsray",
+    "theme",
+    "syntax-highlighting",
+    "code-rendering",
+    "markdown-preview"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "JSRay Default Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/jsray-default-dark-color-theme.json"
+      },
+      {
+        "label": "JSRay Default Light",
+        "uiTheme": "vs",
+        "path": "./themes/jsray-default-light-color-theme.json"
+      },
+      {
+        "label": "JSRay Aurora Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/jsray-aurora-dark-color-theme.json"
+      },
+      {
+        "label": "JSRay Aurora Light",
+        "uiTheme": "vs",
+        "path": "./themes/jsray-aurora-light-color-theme.json"
+      },
+      {
+        "label": "JSRay Ember Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/jsray-ember-dark-color-theme.json"
+      },
+      {
+        "label": "JSRay Ember Light",
+        "uiTheme": "vs",
+        "path": "./themes/jsray-ember-light-color-theme.json"
+      },
+      {
+        "label": "JSRay Fjord Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/jsray-fjord-dark-color-theme.json"
+      },
+      {
+        "label": "JSRay Fjord Light",
+        "uiTheme": "vs",
+        "path": "./themes/jsray-fjord-light-color-theme.json"
+      }
+    ],
+    "markdown.previewStyles": [
+      "./media/themes/default.css",
+      "./media/jsray.css",
+      "./media/markdown-preview.css"
+    ],
+    "markdown.previewScripts": [
+      "./media/jsray.js",
+      "./media/preview-adapter.js"
+    ],
+    "commands": [
+      {
+        "command": "jsray.verifyCore",
+        "title": "JSRay: Verify Bundled Core",
+        "category": "JSRay"
+      }
+    ],
+    "configuration": {
+      "title": "JSRay",
+      "properties": {
+        "jsray.customPalette": {
+          "type": "object",
+          "default": {},
+          "markdownDescription": "Custom colors for the JSRay Markdown preview, layered over the bundled palette. Accepts the JSON the [JSRay Theme Studio](https://jsray.org/studio.html) exports — the same palette file the WordPress plugin and the terminal CLI take. Keys are validated against the token vocabulary of the bundled Core; unknown ones are ignored.\n\nThis styles the **Markdown preview**. To recolor the editor itself, use one of the bundled JSRay color themes plus VS Code's own `editor.tokenColorCustomizations`.",
+          "additionalProperties": true
+        }
+      }
+    },
+    "markdown.markdownItPlugins": true
+  },
+  "scripts": {
+    "build": "node tools/build-themes.mjs",
+    "sync:core": "sh tools/sync-core.sh",
+    "check:versions": "node tools/check-versions.mjs",
+    "test": "node --test tests/*.mjs",
+    "test:editor": "node tests/integration/run.mjs"
+  },
+  "qna": "https://github.com/JSRayCore/jsray-vscode/issues",
+  "galleryBanner": {
+    "color": "#0E1018",
+    "theme": "dark"
+  },
+  "devDependencies": {
+    "@vscode/test-electron": "^3.1.0"
+  }
+}

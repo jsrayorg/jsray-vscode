@@ -100,7 +100,7 @@
         "jsray.customPalette": {
           "type": "object",
           "default": {},
-          "markdownDescription": "Custom colors for the JSRay Markdown preview, layered over the bundled palette. Accepts the JSON the [JSRay Theme Studio](https://jsray.org/studio.html) exports — the same palette file the WordPress plugin and the terminal CLI take. Keys are validated against the token vocabulary of the bundled Core; unknown ones are ignored.\n\nThis styles the **Markdown preview**. To recolor the editor itself, use one of the bundled JSRay color themes plus VS Code's own `editor.tokenColorCustomizations`.",
+          "markdownDescription": "Custom colors for the JSRay Markdown preview, layered over the bundled palette. Accepts the JSON the [JSRay Theme Studio](https://jsray.org/studio.html) exports \u2014 the same palette file the WordPress plugin and the terminal CLI take. Keys are validated against the token vocabulary of the bundled Core; unknown ones are ignored.\n\nThis styles the **Markdown preview**. To recolor the editor itself, use one of the bundled JSRay color themes plus VS Code's own `editor.tokenColorCustomizations`.",
           "additionalProperties": true
         }
       }
@@ -112,7 +112,8 @@
     "sync:core": "sh tools/sync-core.sh",
     "check:versions": "node tools/check-versions.mjs",
     "test": "node --test tests/*.mjs",
-    "test:editor": "node tests/integration/run.mjs"
+    "test:editor": "node tests/integration/run.mjs",
+    "check:core": "node tools/check-core-freshness.mjs"
   },
   "qna": "https://github.com/JSRayCore/jsray-vscode/issues",
   "galleryBanner": {

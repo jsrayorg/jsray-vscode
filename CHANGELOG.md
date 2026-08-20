@@ -9,20 +9,27 @@ versioning follows [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.0.1-beta.1] — 2026-08-01
+
+First public beta. The extension bundles a JSRay Core snapshot because a vsix
+has to work offline, and verifies that snapshot against the digests Core
+published.
+
+### Added
+- **Extension-host tests** (`npm run test:editor`): a real VS Code loads the extension and asserts activation, theme application, command registration, and that the editor's own Markdown pipeline invokes the palette hook.
+- **Core integrity verification.** `extension.js` hashes the bundled runtime, stylesheet, palettes and vocabulary against Core's published digests, warning on activation when they no longer match. **JSRay: Verify Bundled Core** reports on demand.
+- **`jsray.customPalette`.** A Theme Studio palette restyles the Markdown preview through the markdown-it hook, so the preview follows the setting live. Only hex colors are accepted and keys are validated against the bundled vocabulary — a palette cannot inject CSS.
+
 ### Fixed
-- The custom palette never reached the Markdown preview. It was delivered by wrapping `md.render`, which the editor does not call for previews; it is a markdown-it core rule now. Found by running the suite inside a real VS Code — every node-level test had passed against a hand-made markdown-it stand-in.
+- The custom palette never reached the Markdown preview. It was delivered by wrapping `md.render`, which the editor does not call for previews; it is a markdown-it core rule now. Found only by running the suite inside a real VS Code — every node-level test had passed against a hand-made markdown-it stand-in shaped like the assumption being tested.
 - A packaged install reported itself as tampered with: `core-integrity.json` listed the palettes, which `.vscodeignore` excludes, so the manifest described the repository rather than the artifact.
 - The Marketplace rejects SVG images in a README, which blocked packaging outright.
 
-### Added
-- **Extension-host tests** (`npm run test:editor`): a real VS Code loads the extension and asserts activation, theme application, command registration, and that the editor's own markdown pipeline invokes the palette hook.
-- **Core integrity verification.** The extension now has an entry point (`extension.js`) that hashes the bundled runtime, stylesheet, palettes, and vocabulary against the digests JSRay Core published, warning on activation when they no longer match. **JSRay: Verify Bundled Core** reports on demand.
-- **`jsray.customPalette`.** A Theme Studio palette restyles the Markdown preview, injected through the markdown-it hook so the preview follows the setting live. Only hex colors are accepted and keys are validated against the bundled vocabulary, so a palette cannot inject CSS.
-
 ### Changed
-- Bundled Core snapshot advanced to **0.0.1-beta.1** (Core's first public beta); all eight themes regenerated from the updated palettes.
-- Repository documentation aligned with Core: CHANGELOG, CONTRIBUTING, SECURITY, and Code of Conduct now match the ecosystem baseline, and the README carries the shared brand header and a Simplified Chinese translation.
+- Bundled Core is **0.0.1-beta.4**, which fixes a denial of service present in every earlier snapshot: an unterminated interpolating string sent four grammars into exponential backtracking. The Markdown preview renders on the extension host, so a half-written fenced block was enough to reach it. All eight themes regenerate from the palette sources that snapshot publishes.
+- CI fails when the bundled Core is behind the published Core, and a scheduled workflow opens a sync pull request when Core moves. The previous drift check compared against a sibling checkout and skipped silently when Core was absent — every CI run.
 - Manifest gained the Marketplace fields a public listing needs: `repository`, `bugs`, `qna`, and a `galleryBanner` matching the brand's dark base.
+- Repository documentation matches the ecosystem baseline, with the shared brand header and a Simplified Chinese README.
 
 ## [0.0.1-internal.2] — 2026-07-17
 

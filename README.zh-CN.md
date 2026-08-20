@@ -10,8 +10,8 @@
 [English](README.md) · **简体中文**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.0.1--internal.2-lightgrey)](CHANGELOG.md)
-[![Channel](https://img.shields.io/badge/channel-internal%20test-lightgrey)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.0.1--beta.1-lightgrey)](CHANGELOG.md)
+[![Channel](https://img.shields.io/badge/channel-beta-blue)](CHANGELOG.md)
 [![Core](https://img.shields.io/badge/JSRay%20Core-0.0.1--beta.1-success)](https://github.com/JSRayCore/JSRay)
 [![VS Code](https://img.shields.io/badge/VS%20Code-%E2%89%A5%201.75-007acc)](package.json)
 
@@ -27,11 +27,11 @@
 
 ## 功能
 
-**1. 八款编辑器配色主题**——JSRay 的四款调色板(Default、Aurora、Ember、Fjord)各含 dark 与 light 两个变体,全部由调色板 JSON 生成。六族标识符分离通过语义 token 落到编辑器里:参数是斜体暖琥珀,函数声明比调用更亮且加粗,运行时内置变量是加粗冷蓝,常量是哑金。
+**1. 八款编辑器配色主题**——JSRay 的四款调色板(Default、Aurora、Ember、Fjord)各含 dark 与 light 两个变体,全部由调色板 JSON 生成。九族标识符分离通过语义 token 落到编辑器里:参数是斜体暖琥珀,函数声明比调用更亮且加粗,运行时内置变量是加粗冷蓝,常量是哑金。
 
 **2. 由 JSRay 驱动的 Markdown 预览**——内置 Markdown 预览中的围栏代码块由 JSRay Core 本体重新渲染(`media/jsray.js` 在预览页内运行)。没有标注语言的代码块会走 `JSRay.detectLanguage()`,预览还会自动跟随编辑器的明暗界面主题。
 
-## 安装(内部测试)
+## 安装
 
 在仓库根目录执行:
 

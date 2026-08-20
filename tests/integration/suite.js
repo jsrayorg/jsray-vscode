@@ -101,6 +101,90 @@ async function run() {
     );
   });
 
+  await check('the preview palette follows the editor theme', async () => {
+    // previewStyles is a static contribution — one stylesheet, and it was
+    // default.css. Picking Ember gave a warm charcoal editor beside a
+    // Default-coloured preview on the same screen. The palette is emitted
+    // through the markdown-it hook now, which means it depends on
+    // workbench.colorTheme — an API that exists only in here. A node-level
+    // test can read the source and confirm the code was written; only this
+    // can confirm the editor answers.
+    const ember = JSON.parse(
+      require('fs').readFileSync(require('path').join(__dirname, '../../palettes/ember.json'), 'utf8')
+    );
+    const emberKeyword = ember.themes.dark.tokens.keyword.color;
+
+    const workbench = vscode.workspace.getConfiguration('workbench');
+    const before = workbench.get('colorTheme');
+
+    try {
+      await workbench.update('colorTheme', 'JSRay Ember Dark', vscode.ConfigurationTarget.Global);
+
+      const html = await vscode.commands.executeCommand(
+        'markdown.api.render', '```js\nconst x = 1;\n```'
+      );
+
+      assert.ok(
+        html.includes(`--jr-keyword:${emberKeyword}`),
+        `Ember's keyword colour ${emberKeyword} never reached the preview:\n${html.slice(0, 500)}`
+      );
+
+      // Default is served by the bundled stylesheet, so it must NOT be
+      // emitted again — a second block would be dead weight on every render.
+      await workbench.update('colorTheme', 'JSRay Default Dark', vscode.ConfigurationTarget.Global);
+      const plain = await vscode.commands.executeCommand(
+        'markdown.api.render', '```js\nconst x = 1;\n```'
+      );
+      assert.ok(
+        !plain.includes('data-jsray-theme-palette'),
+        'the default palette is emitted twice — the stylesheet already provides it'
+      );
+
+      // Someone on Monokai has not asked for JSRay colours in their preview.
+      await workbench.update('colorTheme', 'Default Dark+', vscode.ConfigurationTarget.Global);
+      const other = await vscode.commands.executeCommand(
+        'markdown.api.render', '```js\nconst x = 1;\n```'
+      );
+      assert.ok(
+        !other.includes('data-jsray-theme-palette'),
+        'a non-JSRay theme still got a JSRay palette injected'
+      );
+    } finally {
+      await workbench.update('colorTheme', before, vscode.ConfigurationTarget.Global);
+    }
+  });
+
+  await check('a custom palette still outranks the theme palette', async () => {
+    const workbench = vscode.workspace.getConfiguration('workbench');
+    const before = workbench.get('colorTheme');
+
+    try {
+      await workbench.update('colorTheme', 'JSRay Ember Dark', vscode.ConfigurationTarget.Global);
+      await vscode.workspace.getConfiguration('jsray').update(
+        'customPalette',
+        { themes: { dark: { tokens: { keyword: { color: '#00FFAA' } } } } },
+        vscode.ConfigurationTarget.Global
+      );
+
+      const html = await vscode.commands.executeCommand(
+        'markdown.api.render', '```js\nconst x = 1;\n```'
+      );
+
+      // Both blocks target [data-theme] at equal specificity, so the later one
+      // wins. The custom block has to come second in the document.
+      const themeAt = html.indexOf('data-jsray-theme-palette');
+      const customAt = html.indexOf('data-jsray-custom-palette');
+      assert.ok(themeAt !== -1, 'the theme palette is missing');
+      assert.ok(customAt !== -1, 'the custom palette is missing');
+      assert.ok(customAt > themeAt, 'the custom palette lands before the theme palette and loses');
+    } finally {
+      await vscode.workspace.getConfiguration('jsray').update(
+        'customPalette', undefined, vscode.ConfigurationTarget.Global
+      );
+      await workbench.update('colorTheme', before, vscode.ConfigurationTarget.Global);
+    }
+  });
+
   await check('markdown preview contributions are declared', () => {
     const contributes = extension.packageJSON.contributes;
     assert.equal(contributes['markdown.markdownItPlugins'], true);

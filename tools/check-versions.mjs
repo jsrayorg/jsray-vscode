@@ -26,6 +26,11 @@ if (channel === 'internal') {
   expect(pkg.private === true, 'internal channel must keep package.json private true');
 }
 
+if (channel === 'beta') {
+  expect(/-beta\.\d+$/.test(version), 'beta channel versions must end with -beta.N');
+  expect(release.publicBetaReleased === true, 'beta channel must set publicBetaReleased true');
+}
+
 if (channel === 'stable') {
   expect(!version.includes('-'), 'stable channel versions must not include a prerelease suffix');
 }
@@ -65,6 +70,16 @@ includes('README.zh-CN.md', '内置 Core 的快照', 'the Core snapshot boundary
 for (const doc of ['LICENSE', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md', 'CODE_OF_CONDUCT.md']) {
   expect(existsSync(doc), `${doc} missing — the ecosystem baseline requires it`);
 }
+
+// A changelog that exists is not a changelog that was written. Checking only
+// for the file let this repository reach a version whose newest entry named
+// the version before it — the promotion happened, the note about it did not.
+includes('CHANGELOG.md', `## [${version}]`, `a CHANGELOG.md section for ${version}`);
+
+// The supported-versions table is a promise to whoever is deciding whether to
+// report privately. Core's sat on an old version through an entire release
+// cycle before anything checked it.
+includes('SECURITY.md', `| ${version} | ✅`, `${version} in the supported-versions table`);
 
 for (const file of ['vocabulary.json', 'core-integrity.json', 'extension.js']) {
   expect(existsSync(file), `${file} missing — run 'sh tools/sync-core.sh'`);

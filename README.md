@@ -10,8 +10,8 @@
 **English** · [简体中文](README.zh-CN.md)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.0.1--internal.2-lightgrey)](CHANGELOG.md)
-[![Channel](https://img.shields.io/badge/channel-internal%20test-lightgrey)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.0.1--beta.1-lightgrey)](CHANGELOG.md)
+[![Channel](https://img.shields.io/badge/channel-beta-blue)](CHANGELOG.md)
 [![Core](https://img.shields.io/badge/JSRay%20Core-0.0.1--beta.1-success)](https://github.com/JSRayCore/JSRay)
 [![VS Code](https://img.shields.io/badge/VS%20Code-%E2%89%A5%201.75-007acc)](package.json)
 
@@ -27,11 +27,11 @@ It **bundles a snapshot** of Core rather than depending on it at runtime, so the
 
 ## What it does
 
-**1. Eight editor color themes** — every JSRay palette (Default, Aurora, Ember, Fjord) in dark and light variants, generated from the palette JSON. The six-family identifier separation lands in the editor through semantic tokens: parameters italic warm-amber, function declarations bold and brighter than calls, runtime builtins bold cool-blue, constants muted gold.
+**1. Eight editor color themes** — every JSRay palette (Default, Aurora, Ember, Fjord) in dark and light variants, generated from the palette JSON. The nine-family identifier separation lands in the editor through semantic tokens: parameters italic warm-amber, function declarations bold and brighter than calls, runtime builtins bold cool-blue, constants muted gold.
 
 **2. JSRay-powered Markdown preview** — fenced code blocks in the built-in Markdown preview are re-rendered by JSRay Core itself (`media/jsray.js` runs inside the preview). Unmarked blocks go through `JSRay.detectLanguage()`, and the preview follows the editor's light/dark UI automatically.
 
-## Install (internal test)
+## Install
 
 From the repository root:
 

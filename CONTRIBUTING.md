@@ -8,12 +8,17 @@ the renderer itself belong in [JSRay Core](https://github.com/JSRayCore/JSRay).
 1. Fork and clone
 2. Open the folder in VS Code and press `F5` to launch the Extension Development Host
 3. In that window: **Preferences: Color Theme** → `JSRay …`, and open a Markdown preview
-4. Run the tests: `npm test` (requires Node ≥ 18), then `npm run test:editor`
+4. Run the tests: `npm test` (requires Node ≥ 20), then `npm run test:editor`
    — the second launches a real VS Code and asserts inside its extension host.
    Only that layer catches what the editor itself refuses: the first run of it
    found the preview never receiving the custom palette, because wrapping
    `md.render` is not an entry point the editor uses.
-5. Run `npm run check:versions` before opening a PR
+5. Run `npm run check:versions` and `npm run check:core` before opening a PR.
+   The second asks npm whether the bundled Core snapshot is still the published
+   one — the older drift check compares against a sibling checkout and skips
+   when Core is absent, which is every CI run, so a stale engine used to pass a
+   green build. It did: a denial of service fixed in Core sat in this bundle
+   until somebody measured it.
 
 ## Do not edit synced or generated files
 

@@ -57,7 +57,33 @@ function verifyCore(root) {
   };
 }
 
+/**
+ * Colors a palette may carry.
+ *
+ * Hex is what the Theme Studio's pickers produce, but a palette is not only
+ * hex: Core's own `lineHighlight` is `rgba(255,255,255,0.05)`, because a
+ * translucent overlay cannot be written any other way. Accepting hex alone
+ * meant the official palettes lost that surface here while keeping it in
+ * WordPress — the same file, validated three ways.
+ *
+ * Deliberately narrow all the same. These values are written into a style
+ * block, so `url()`, `var()`, `expression()` and anything carrying a semicolon
+ * stay out. Matches the WordPress implementation rule for rule.
+ */
 const COLOR_RE = /^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+const COLOR_FN_RE = /^(?:rgb|rgba|hsl|hsla)\(\s*[0-9a-zA-Z.,%/\s+-]+\s*\)$/;
+const COLOR_KEYWORDS = new Set(['transparent', 'currentcolor', 'inherit']);
+
+/** @param {unknown} value @returns {boolean} */
+function isColor(value) {
+  if (typeof value !== 'string') return false;
+  const trimmed = value.trim();
+  if (!trimmed || trimmed.length > 64) return false;
+
+  return COLOR_RE.test(trimmed)
+    || COLOR_FN_RE.test(trimmed)
+    || COLOR_KEYWORDS.has(trimmed.toLowerCase());
+}
 
 /**
  * Validate a custom palette against the bundled vocabulary.
@@ -84,7 +110,7 @@ function validatePalette(input, vocabulary) {
     const theme = { tokens: {} };
 
     for (const surface of Object.keys(vocabulary.surfaces || {})) {
-      if (typeof block[surface] === 'string' && COLOR_RE.test(block[surface])) {
+      if (typeof block[surface] === 'string' && isColor(block[surface])) {
         theme[surface] = block[surface];
       }
     }
@@ -97,7 +123,7 @@ function validatePalette(input, vocabulary) {
 
       const color = typeof token === 'string' ? token : token && token.color;
 
-      if (typeof color !== 'string' || !COLOR_RE.test(color)) {
+      if (typeof color !== 'string' || !isColor(color)) {
         warnings.push(`ignored "${key}" in ${mode} — not a hex color`);
         continue;
       }
@@ -184,6 +210,40 @@ function activate(context) {
 
   const vocabulary = JSON.parse(readFileSync(join(root, 'vocabulary.json'), 'utf8'));
 
+  /**
+   * Which JSRay palette the active colour theme belongs to.
+   *
+   * The preview's stylesheet is a static contribution, so it can only ever be
+   * one file — and it was `default.css`. A reader who picked Ember got a warm
+   * charcoal editor next to a Default-coloured preview, on the same screen.
+   * The palette JSON is already bundled for exactly this kind of use, so the
+   * matching one is emitted the same way a custom palette is.
+   *
+   * Returns null for a non-JSRay theme: someone using Monokai has not asked
+   * for JSRay's colours in their preview, and the stylesheet default is the
+   * right answer there.
+   */
+  const activePaletteId = () => {
+    const name = vscode.workspace.getConfiguration('workbench').get('colorTheme') || '';
+    const match = /^JSRay\s+(\w+)/i.exec(String(name));
+    if (!match) return null;
+
+    const id = match[1].toLowerCase();
+    return existsSync(join(root, 'palettes', `${id}.json`)) ? id : null;
+  };
+
+  /** Base style block for the palette the editor theme belongs to. */
+  const themePaletteStyle = () => {
+    const id = activePaletteId();
+    if (!id || id === 'default') return ''; // default.css already provides it
+
+    const palette = JSON.parse(readFileSync(join(root, 'palettes', `${id}.json`), 'utf8'));
+    const { themes } = validatePalette(palette, vocabulary);
+    const css = paletteCss(themes, vocabulary);
+
+    return css ? `<style data-jsray-theme-palette="${id}">${css}</style>` : '';
+  };
+
   /** Build the style block for the palette currently in settings. */
   const currentPaletteStyle = () => {
     const configured = vscode.workspace.getConfiguration('jsray').get('customPalette');
@@ -207,7 +267,10 @@ function activate(context) {
   // a live loop rather than a reload-and-hope one.
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration((event) => {
-      if (event.affectsConfiguration('jsray.customPalette')) {
+      // workbench.colorTheme matters too: the preview's palette follows the
+      // editor theme, so switching themes has to repaint it.
+      if (event.affectsConfiguration('jsray.customPalette')
+        || event.affectsConfiguration('workbench.colorTheme')) {
         vscode.commands.executeCommand('markdown.preview.refresh');
       }
     })
@@ -221,13 +284,17 @@ function activate(context) {
     // reaches the renderer through more than one entry point, and a wrapped
     // render() simply never fires for the preview.
     extendMarkdownIt(md) {
-      md.core.ruler.push('jsray_custom_palette', (state) => {
-        const style = currentPaletteStyle();
-        if (!style) return;
-
-        const token = new state.Token('html_block', '', 0);
-        token.content = style;
-        state.tokens.unshift(token);
+      md.core.ruler.push('jsray_palette', (state) => {
+        // Order matters and reads backwards: unshift puts each block first, so
+        // the custom palette is inserted last to end up ahead of nothing and
+        // the theme palette ends up behind it. Later rules win in CSS, so the
+        // theme block is emitted first and a custom palette still overrides.
+        for (const style of [currentPaletteStyle(), themePaletteStyle()]) {
+          if (!style) continue;
+          const token = new state.Token('html_block', '', 0);
+          token.content = style;
+          state.tokens.unshift(token);
+        }
       });
 
       return md;

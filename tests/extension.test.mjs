@@ -5,7 +5,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { createRequire } from 'node:module';
-import { readFileSync, writeFileSync, mkdtempSync, mkdirSync, copyFileSync, appendFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdtempSync, mkdirSync, copyFileSync, appendFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { dirname, resolve } from 'node:path';
@@ -130,4 +130,118 @@ test('the manifest declares the entry point the verification needs', () => {
   assert.ok(pkg.contributes.commands.some((c) => c.command === 'jsray.verifyCore'));
   assert.ok(pkg.contributes.configuration.properties['jsray.customPalette']);
   assert.equal(pkg.contributes['markdown.markdownItPlugins'], true);
+});
+
+
+const CORE = createRequire(import.meta.url)(resolve(ROOT, 'media/jsray.js'));
+const VOCABULARY = JSON.parse(readFileSync(resolve(ROOT, 'vocabulary.json'), 'utf8'));
+const DOC_FILES = ['README.md', 'README.zh-CN.md'];
+
+test('documented counts match the bundled Core, not a remembered one', () => {
+  // Every number here was copied from Core's README at some point, and Core's
+  // numbers move: the identifier-family count read "six" against a table with
+  // nine rows for as long as nobody checked. The bundled snapshot is the only
+  // authority this repository has, so it is the one to check against.
+  const grammars = new Set(Object.values(CORE.languages)).size;
+  const tokens = Object.keys(VOCABULARY.tokens).length;
+
+  for (const file of DOC_FILES) {
+    const path = resolve(ROOT, file);
+    if (!existsSync(path)) continue;
+    const text = readFileSync(path, 'utf8');
+
+    for (const [claim, count, kind] of [...text.matchAll(/(\d+)\s*(language famil|token class|个 token|种语言)/gi)]
+        .map((m) => [m[0], Number(m[1]), m[2].toLowerCase()])) {
+      const expected = /language|种语言/.test(kind) ? grammars : tokens;
+      assert.equal(count, expected, `${file} claims "${claim}" but the bundled Core has ${expected}`);
+    }
+
+    // The identifier families are a Core concept the docs restate in prose.
+    assert.doesNotMatch(text, /\b(six|Six)[- ]family\b/, `${file} still says six-family`);
+    assert.doesNotMatch(text, /六[- ]?族/, `${file} still says 六族`);
+  }
+});
+
+test('every shipped theme resolves to a bundled palette', () => {
+  // The preview's stylesheet is a static contribution — one file, and it was
+  // default.css. Picking Ember gave a warm charcoal editor beside a
+  // Default-coloured preview on the same screen. The palette now follows the
+  // theme, which only works if every theme label maps to a palette that exists.
+  const themes = JSON.parse(readFileSync(resolve(ROOT, 'package.json'), 'utf8')).contributes.themes;
+  const NAME = /^JSRay\s+(\w+)/i;
+
+  assert.ok(themes.length >= 8, 'expected the four palettes in dark and light');
+
+  for (const theme of themes) {
+    const match = NAME.exec(theme.label);
+    assert.ok(match, `"${theme.label}" does not start with JSRay <palette>`);
+    const id = match[1].toLowerCase();
+    assert.ok(existsSync(resolve(ROOT, 'palettes', `${id}.json`)),
+      `"${theme.label}" resolves to palettes/${id}.json, which does not exist`);
+  }
+
+  // A reader on someone else's theme has not asked for JSRay's colours in
+  // their preview; the bundled stylesheet is the right answer there.
+  for (const other of ['Monokai', 'Default Dark+', 'Solarized Light', '']) {
+    assert.equal(NAME.exec(other), null, `"${other}" should not be treated as a JSRay theme`);
+  }
+});
+
+test('a custom palette still wins over the theme palette', () => {
+  // Both blocks target [data-theme] at the same specificity, so source order
+  // decides. The rule unshifts, which reverses insertion — the custom block is
+  // inserted first so it ends up behind, and therefore later in the document.
+  const source = readFileSync(resolve(ROOT, 'extension.js'), 'utf8');
+  const rule = source.slice(source.indexOf("md.core.ruler.push('jsray_palette'"));
+  const order = rule.slice(0, rule.indexOf('});'));
+
+  assert.ok(
+    order.indexOf('currentPaletteStyle()') < order.indexOf('themePaletteStyle()'),
+    'the custom palette must be unshifted first so it lands after the theme palette'
+  );
+
+  // Switching themes has to repaint, or the preview keeps the old palette.
+  assert.match(source, /affectsConfiguration\('workbench\.colorTheme'\)/,
+    'a theme change does not refresh the preview');
+});
+
+test("Core's own palettes keep every surface through validation", () => {
+  // "A palette authored once works on every JSRay surface" was the promise,
+  // and the same file kept lineHighlight in WordPress and lost it here —
+  // rgba() is not hex, and hex was all this accepted. Core's lineHighlight is
+  // rgba because a translucent overlay cannot be written any other way.
+  const vocabulary = JSON.parse(readFileSync(resolve(ROOT, 'vocabulary.json'), 'utf8'));
+
+  for (const file of ['default', 'aurora', 'ember', 'fjord']) {
+    const palette = JSON.parse(readFileSync(resolve(ROOT, 'palettes', `${file}.json`), 'utf8'));
+    const { themes } = validatePalette(palette, vocabulary);
+
+    for (const mode of ['dark', 'light']) {
+      for (const surface of Object.keys(palette.themes[mode]).filter((k) => k !== 'tokens')) {
+        assert.ok(themes[mode][surface],
+          `${file}.${mode}.${surface} = ${palette.themes[mode][surface]} was dropped`);
+      }
+    }
+  }
+});
+
+test('the colour rule still refuses what cannot go in a style block', () => {
+  // Widening from hex to rgb/hsl must not widen to url() or a stray semicolon:
+  // these values are written straight into a <style> the preview loads.
+  const vocabulary = JSON.parse(readFileSync(resolve(ROOT, 'vocabulary.json'), 'utf8'));
+
+  for (const hostile of [
+    'url(javascript:alert(1))',
+    'var(--x)',
+    'red;}body{display:none',
+    'expression(alert(1))',
+    '#fff</style><script>alert(1)</script>',
+    'a'.repeat(200),
+  ]) {
+    const { themes } = validatePalette(
+      { themes: { dark: { tokens: { keyword: { color: hostile } } } } },
+      vocabulary
+    );
+    assert.equal(themes.dark.tokens.keyword, undefined, `accepted: ${hostile}`);
+  }
 });

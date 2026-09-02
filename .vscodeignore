@@ -1,6 +1,12 @@
 # Everything the extension does not need at runtime. The Marketplace package
 # should be what VS Code loads — themes, the bundled Core, the preview adapter —
 # not the machinery used to produce them.
+#
+# palettes/ is not machinery: extension.js reads palettes/<id>.json at render
+# time to give the preview the colours of whichever JSRay theme is active.
+# Excluding it did nothing in development, where the folder is simply there,
+# and shipped a package where picking Ember gave an Ember editor beside a
+# Default-coloured preview.
 node_modules/**
 package-lock.json
 .vscode/**
@@ -8,7 +14,6 @@ package-lock.json
 .vscode-test-profile/**
 tests/**
 tools/**
-palettes/**
 docker-compose.yml
 .github/**
 .gitignore

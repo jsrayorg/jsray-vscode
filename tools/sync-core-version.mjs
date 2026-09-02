@@ -138,3 +138,22 @@ writeFileSync(
 );
 
 console.log(`core-integrity.json pinned — ${Object.keys(files).length} files, Core ${coreRelease.version}`);
+
+// The README badges state the bundled Core, and nothing was keeping them in
+// step — this script moved version.json and left them behind, which is how
+// they came to read 0.0.1-beta.1 against a 0.0.1-beta.5 bundle on the first
+// thing anyone sees. It is derivable, so derive it.
+const badge = coreRelease.version.replace(/-/g, '--');
+
+for (const doc of ['README.md', 'README.zh-CN.md']) {
+  const before = readFileSync(doc, 'utf8');
+  const after = before.replace(
+    /JSRay%20Core-[^-)]*(?:--[^-)]*)*-success/g,
+    `JSRay%20Core-${badge}-success`
+  );
+
+  if (after !== before) {
+    writeFileSync(doc, after);
+    console.log(`${doc} — Core badge now reads ${coreRelease.version}`);
+  }
+}

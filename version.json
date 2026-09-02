@@ -7,7 +7,7 @@
   "nextPublicBeta": "0.0.1-beta.1",
   "bundledCore": {
     "project": "jsray",
-    "version": "0.0.1-beta.5"
+    "version": "0.0.2-beta.1"
   },
   "notes": "Official open-source VS Code integration in the JSRay ecosystem. Ships editor color themes generated from JSRay palettes and a JSRay-powered Markdown preview renderer. Marketplace releases require a plain semver version (strip the -internal/-beta suffix at publish time)."
 }

@@ -12,7 +12,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-0.0.1--beta.1-lightgrey)](CHANGELOG.md)
 [![Channel](https://img.shields.io/badge/channel-beta-blue)](CHANGELOG.md)
-[![Core](https://img.shields.io/badge/JSRay%20Core-0.0.1--beta.1-success)](https://github.com/JSRayCore/JSRay)
+[![Core](https://img.shields.io/badge/JSRay%20Core-0.0.2--beta.1-success)](https://github.com/JSRayCore/JSRay)
 [![VS Code](https://img.shields.io/badge/VS%20Code-%E2%89%A5%201.75-007acc)](package.json)
 
 > 面向 VS Code 的 JSRay 代码渲染 · 8 款配色主题 · 由 JSRay 驱动的 Markdown 预览

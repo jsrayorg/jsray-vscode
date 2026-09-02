@@ -3,6 +3,7 @@
 # not the machinery used to produce them.
 node_modules/**
 package-lock.json
+.vscode/**
 .vscode-test/**
 .vscode-test-profile/**
 tests/**

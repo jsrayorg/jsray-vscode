@@ -50,3 +50,34 @@ test('markdown preview loads core runtime before the adapter', () => {
   assert.ok(core !== -1 && adapter !== -1 && core < adapter,
     'jsray.js must load before preview-adapter.js');
 });
+
+test('the READMEs render as HTML rather than swallowing themselves', () => {
+  // A blank line inside an HTML comment ends the HTML block. The remainder
+  // becomes an indented code fence, the comment never closes, and the browser
+  // eats the rest of the document — the extension's DETAILS tab came up empty
+  // with the file itself perfectly intact on disk, which is the sort of thing
+  // that costs an afternoon.
+  for (const doc of ['README.md', 'README.zh-CN.md']) {
+    const text = readFileSync(resolve(ROOT, doc), 'utf8');
+
+    for (const comment of text.match(/<!--[\s\S]*?-->/g) || []) {
+      assert.doesNotMatch(
+        comment,
+        /\n[ \t]*\n/,
+        `${doc} has a comment with a blank line in it, which ends the HTML block early`
+      );
+      assert.doesNotMatch(
+        comment.slice(4, -3),
+        /<!--|-->/,
+        `${doc} has a comment quoting a comment marker, which does not nest`
+      );
+    }
+
+    // Every comment that opens has to close.
+    assert.equal(
+      (text.match(/<!--/g) || []).length,
+      (text.match(/-->/g) || []).length,
+      `${doc} has an unbalanced HTML comment`
+    );
+  }
+});

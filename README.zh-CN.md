@@ -1,10 +1,12 @@
 <p align="center">
-  <!-- PNG rather than SVG: the VS Code Marketplace rejects SVG images in a
-       README, and this file is what the listing renders. -->
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://jsray.org/assets/brand/jsray-logo-dark.png">
-    <img src="https://jsray.org/assets/brand/jsray-logo-light.png" alt="JSRay" width="420">
-  </picture>
+  <!-- PNG rather than SVG: the Marketplace rejects SVG in a README. One image
+       rather than a picture pair, because the viewer ignores
+       prefers-color-scheme and serves the fallback anyway, and that fallback
+       was the lockup with a white plate baked into it. This hero is
+       transparent. No blank line inside this comment: a blank line ends the
+       HTML block, the rest of it becomes a code fence, and the comment never
+       closes. -->
+  <img src="https://jsray.org/assets/brand/jsray-logo-hero-dark.png" alt="JSRay" width="380">
 </p>
 
 [English](README.md) · **简体中文**

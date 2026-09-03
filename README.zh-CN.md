@@ -14,7 +14,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-0.0.1--beta-blue)](CHANGELOG.md)
 [![Channel](https://img.shields.io/badge/channel-public%20beta-blue)](CHANGELOG.md)
-[![Core](https://img.shields.io/badge/JSRay%20Core-0.0.2--beta.1-success)](https://github.com/JSRayCore/JSRay)
+[![Core](https://img.shields.io/badge/JSRay%20Core-0.0.2--beta.1-success)](https://github.com/jsrayorg/jsray)
 [![VS Code](https://img.shields.io/badge/VS%20Code-%E2%89%A5%201.75-007acc)](package.json)
 
 > 面向 VS Code 的 JSRay 代码渲染 · 8 款配色主题 · 由 JSRay 驱动的 Markdown 预览
@@ -23,7 +23,7 @@
 
 ---
 
-当前仓库是围绕 [JSRay Core](https://github.com/JSRayCore/JSRay) 的独立 **VS Code 扩展**项目——JSRay 生态中的官方开源集成,拥有自己的版本号与更新日志。
+当前仓库是围绕 [JSRay Core](https://github.com/jsrayorg/jsray) 的独立 **VS Code 扩展**项目——JSRay 生态中的官方开源集成,拥有自己的版本号与更新日志。
 
 它**内置 Core 的快照**,而不是在运行时依赖 Core。因此在你主动执行同步之前,扩展的行为与发布当天完全一致。
 

@@ -14,7 +14,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-0.0.1--beta-blue)](CHANGELOG.md)
 [![Channel](https://img.shields.io/badge/channel-public%20beta-blue)](CHANGELOG.md)
-[![Core](https://img.shields.io/badge/JSRay%20Core-0.0.2--beta.1-success)](https://github.com/JSRayCore/JSRay)
+[![Core](https://img.shields.io/badge/JSRay%20Core-0.0.2--beta.1-success)](https://github.com/jsrayorg/jsray)
 [![VS Code](https://img.shields.io/badge/VS%20Code-%E2%89%A5%201.75-007acc)](package.json)
 
 > JSRay code rendering for VS Code · 8 color themes · JSRay-powered Markdown preview
@@ -23,7 +23,7 @@
 
 ---
 
-This repository is the standalone **VS Code extension** project around [JSRay Core](https://github.com/JSRayCore/JSRay) — an official open-source integration in the JSRay ecosystem, with its own version and release notes.
+This repository is the standalone **VS Code extension** project around [JSRay Core](https://github.com/jsrayorg/jsray) — an official open-source integration in the JSRay ecosystem, with its own version and release notes.
 
 It **bundles a snapshot** of Core rather than depending on it at runtime, so the extension keeps working exactly as shipped until a sync deliberately advances it.
 

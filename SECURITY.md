@@ -18,7 +18,7 @@ This extension contributes color themes and runs the bundled Core inside the bui
 - The extension declares no network access and reads no workspace files beyond what the preview already renders.
 
 Vulnerabilities in the bundled JSRay Core snapshot belong to
-[JSRay Core](https://github.com/JSRayCore/JSRay) — report them the same way, and
+[JSRay Core](https://github.com/jsrayorg/jsray) — report them the same way, and
 fixes reach this project through the next Core sync.
 
 Out of scope:

@@ -9,10 +9,10 @@
   "homepage": "https://jsray.org",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JSRayCore/jsray-vscode.git"
+    "url": "git+https://github.com/jsrayorg/jsray-vscode.git"
   },
   "bugs": {
-    "url": "https://github.com/JSRayCore/jsray-vscode/issues"
+    "url": "https://github.com/jsrayorg/jsray-vscode/issues"
   },
   "private": true,
   "icon": "media/icon.png",
@@ -116,7 +116,7 @@
     "check:core": "node tools/check-core-freshness.mjs",
     "test:packaged": "node tests/integration/run-packaged.mjs"
   },
-  "qna": "https://github.com/JSRayCore/jsray-vscode/issues",
+  "qna": "https://github.com/jsrayorg/jsray-vscode/issues",
   "galleryBanner": {
     "color": "#0E1018",
     "theme": "dark"

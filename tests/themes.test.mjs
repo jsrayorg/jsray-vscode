@@ -68,3 +68,43 @@ test('six-family separation survives the mapping (default dark)', () => {
   const paramRule = theme.tokenColors.find((r) => r.name === 'JSRay · variable.parameter');
   assert.equal(paramRule.settings.fontStyle, 'italic');
 });
+
+test('a theme colours the editor and the workbench around it', () => {
+  // Eight entries, all of them editor.*, was the whole of it — everything
+  // else fell back to VS Code's defaults for the ui theme, and the default
+  // light activity bar is dark. A JSRay Light theme gave a white editor
+  // beside a black sidebar, which is the sort of thing only a person looking
+  // at it notices.
+  const surfaces = [
+    'activityBar.background',
+    'sideBar.background',
+    'statusBar.background',
+    'titleBar.activeBackground',
+    'editorGroupHeader.tabsBackground',
+  ];
+
+  for (const file of readdirSync(resolve(ROOT, 'themes')).filter((f) => f.endsWith('.json'))) {
+    const theme = JSON.parse(read(`themes/${file}`));
+
+    for (const key of surfaces) {
+      assert.ok(theme.colors[key], `${file} leaves ${key} to the editor's default`);
+    }
+
+    // And the surfaces have to belong to the same side of the palette as the
+    // editor, or the fallback is simply replaced by a mismatch of our own.
+    const luminance = (hex) => {
+      const parts = hex.replace('#', '').match(/../g).map((h) => parseInt(h, 16) / 255)
+        .map((v) => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)));
+      return 0.2126 * parts[0] + 0.7152 * parts[1] + 0.0722 * parts[2];
+    };
+
+    const editor = luminance(theme.colors['editor.background']);
+    for (const key of surfaces) {
+      const surface = luminance(theme.colors[key]);
+      assert.ok(
+        Math.abs(surface - editor) < 0.25,
+        `${file}: ${key} is ${surface.toFixed(2)} against an editor at ${editor.toFixed(2)}`
+      );
+    }
+  }
+});

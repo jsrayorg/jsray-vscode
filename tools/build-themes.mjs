@@ -76,6 +76,117 @@ function hexify(color) {
   return `#${h(r)}${h(g)}${h(b)}${alpha}`;
 }
 
+/**
+ * Blend two colours, so the workbench chrome can be derived from the palette
+ * rather than guessed at. Anything that is not a hex triple comes back
+ * unchanged — a palette may legitimately carry rgba().
+ */
+function mix(base, other, percentOfBase) {
+  const parse = (hex) => {
+    const m = /^#([\da-f]{3}|[\da-f]{6})$/i.exec(String(hex).trim());
+    if (!m) return null;
+    const h = m[1].length === 3 ? m[1].replace(/./g, (c) => c + c) : m[1];
+    return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16));
+  };
+  const a = parse(base);
+  const b = parse(other);
+  if (!a || !b) return base;
+  const w = Math.max(0, Math.min(1, percentOfBase / 100));
+  return '#' + a
+    .map((v, i) => Math.round(v * w + b[i] * (1 - w)).toString(16).padStart(2, '0'))
+    .join('');
+}
+
+
+/**
+ * The editor was the only thing these themes coloured — eight entries, all of
+ * them `editor.*`. Everything around it fell back to VS Code's defaults for
+ * the ui theme, and the default light activity bar is dark: a JSRay Light
+ * theme gave a white editor beside a black sidebar.
+ *
+ * All of it is derived from the palette. `chrome` is the editor background
+ * nudged towards the foreground, which reads as a surface behind the editor in
+ * both modes without needing a second set of colours to keep in step.
+ */
+function workbenchColors(theme, tokens, get, mode) {
+  const bg = hexify(theme.background);
+  const fg = hexify(theme.foreground);
+  const border = hexify(theme.border || (mode === 'dark' ? '#2C2C2E' : '#E5E5EA'));
+  const gutter = hexify(theme.gutter || (mode === 'dark' ? '#48484A' : '#8E8E93'));
+
+  const chrome = mix(bg, fg, mode === 'dark' ? 96 : 97);
+  const sunken = mix(bg, fg, mode === 'dark' ? 92 : 94);
+  const muted = mix(fg, bg, 62);
+  // The declaration colour is the palette's most distinctive hue in every
+  // theme, which makes it the one to point a badge or a focus ring with.
+  const accent = hexify((get('function.declaration') || get('function') || {}).color || fg);
+
+  return {
+    'editor.background': bg,
+    'editor.foreground': fg,
+    'editorCursor.foreground': fg,
+    'editorLineNumber.foreground': gutter,
+    'editorLineNumber.activeForeground': fg,
+    'editor.lineHighlightBackground': hexify(
+      theme.lineHighlight || (mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)')
+    ),
+    'editorIndentGuide.background1': border,
+    'editorWidget.background': chrome,
+    'editorWidget.border': border,
+
+    'editorGroupHeader.tabsBackground': sunken,
+    'editorGroup.border': border,
+    'tab.activeBackground': bg,
+    'tab.activeForeground': fg,
+    'tab.inactiveBackground': sunken,
+    'tab.inactiveForeground': muted,
+    'tab.border': border,
+    'tab.activeBorderTop': accent,
+
+    'activityBar.background': chrome,
+    'activityBar.foreground': fg,
+    'activityBar.inactiveForeground': muted,
+    'activityBar.border': border,
+    'activityBarBadge.background': accent,
+    'activityBarBadge.foreground': bg,
+
+    'sideBar.background': chrome,
+    'sideBar.foreground': muted,
+    'sideBar.border': border,
+    'sideBarTitle.foreground': fg,
+    'sideBarSectionHeader.background': chrome,
+    'sideBarSectionHeader.border': border,
+
+    'list.activeSelectionBackground': mix(bg, fg, 88),
+    'list.activeSelectionForeground': fg,
+    'list.hoverBackground': mix(bg, fg, 93),
+    'list.inactiveSelectionBackground': sunken,
+
+    'statusBar.background': chrome,
+    'statusBar.foreground': muted,
+    'statusBar.border': border,
+    'statusBarItem.remoteBackground': accent,
+    'statusBarItem.remoteForeground': bg,
+
+    'titleBar.activeBackground': chrome,
+    'titleBar.activeForeground': fg,
+    'titleBar.inactiveBackground': chrome,
+    'titleBar.inactiveForeground': muted,
+    'titleBar.border': border,
+
+    'panel.background': bg,
+    'panel.border': border,
+    'panelTitle.activeForeground': fg,
+    'panelTitle.inactiveForeground': muted,
+
+    'focusBorder': accent,
+    'input.background': sunken,
+    'input.border': border,
+    'dropdown.background': sunken,
+    'dropdown.border': border,
+  };
+}
+
 function fontStyleOf(tok) {
   return tok.fontStyle || '';
 }
@@ -122,16 +233,7 @@ function buildTheme(palette, id, mode) {
     name: `JSRay ${palette.name} ${mode === 'dark' ? 'Dark' : 'Light'}`,
     type: mode,
     semanticHighlighting: true,
-    colors: {
-      'editor.background': hexify(theme.background),
-      'editor.foreground': hexify(theme.foreground),
-      'editorCursor.foreground': hexify(theme.foreground),
-      'editorLineNumber.foreground': hexify(theme.gutter || (mode === 'dark' ? '#48484A' : '#8E8E93')),
-      'editor.lineHighlightBackground': hexify(theme.lineHighlight || (mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)')),
-      'editorIndentGuide.background1': hexify(theme.border || (mode === 'dark' ? '#2C2C2E' : '#E5E5EA')),
-      'editorGroupHeader.tabsBackground': hexify(theme.background),
-      'tab.activeBackground': hexify(theme.background),
-    },
+    colors: workbenchColors(theme, tokens, get, mode),
     tokenColors,
     semanticTokenColors,
   };

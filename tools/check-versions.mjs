@@ -67,6 +67,31 @@ const includes = (path, needle, label = needle) =>
   expect(existsSync(path) && read(path).includes(needle), `${path} is missing ${label}`);
 includes('README.md', 'bundles a snapshot', 'the Core snapshot boundary statement');
 includes('README.zh-CN.md', '内置 Core 的快照', 'the Core snapshot boundary statement');
+
+// The phase wording drifts in whichever direction nobody is looking. jsray-wp
+// shipped a public beta describing itself as an internal build for weeks, and
+// this repository still called itself internal on the day it was opened up. So
+// the check runs both ways: the wording the phase calls for has to be present,
+// and the wording it does not call for has to be absent.
+//
+// Keyed on publicBetaReleased rather than channel: `channel` is the
+// version-numbering scheme and every integration sits on `beta`, while
+// publicBetaReleased is what actually changes when a repository goes out.
+const PHASE = release.publicBetaReleased
+  ? { en: 'Public beta', zh: '公开测试版', reject: /Internal test build|内部测试版/, badge: 'channel-public%20beta' }
+  : { en: 'Internal test build', zh: '内部测试版', reject: /Public beta|公开测试版/, badge: 'channel-internal' };
+
+includes('README.md', PHASE.en, 'the phase this release is in');
+includes('README.zh-CN.md', PHASE.zh, 'the phase this release is in');
+includes('README.md', PHASE.badge, 'a channel badge matching the phase');
+includes('README.zh-CN.md', PHASE.badge, 'a channel badge matching the phase');
+
+for (const doc of ['README.md', 'README.zh-CN.md']) {
+  expect(
+    !PHASE.reject.test(read(doc)),
+    `${doc} still describes a phase this release is not (publicBetaReleased: ${release.publicBetaReleased})`
+  );
+}
 for (const doc of ['LICENSE', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md', 'CODE_OF_CONDUCT.md']) {
   expect(existsSync(doc), `${doc} missing — the ecosystem baseline requires it`);
 }

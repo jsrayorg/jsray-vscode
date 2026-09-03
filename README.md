@@ -12,14 +12,14 @@
 **English** · [简体中文](README.zh-CN.md)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.0.1--beta.1-lightgrey)](CHANGELOG.md)
-[![Channel](https://img.shields.io/badge/channel-beta-blue)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.0.1--beta.1-blue)](CHANGELOG.md)
+[![Channel](https://img.shields.io/badge/channel-public%20beta-blue)](CHANGELOG.md)
 [![Core](https://img.shields.io/badge/JSRay%20Core-0.0.2--beta.1-success)](https://github.com/JSRayCore/JSRay)
 [![VS Code](https://img.shields.io/badge/VS%20Code-%E2%89%A5%201.75-007acc)](package.json)
 
 > JSRay code rendering for VS Code · 8 color themes · JSRay-powered Markdown preview
 
-<sub>Internal test build · not yet on the Marketplace · bundles a JSRay Core snapshot</sub>
+<sub>Public beta · not yet on the Marketplace · bundles a digest-verified JSRay Core snapshot</sub>
 
 ---
 

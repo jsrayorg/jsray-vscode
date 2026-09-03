@@ -17,7 +17,7 @@ const version = release.version;
 const channel = release.channel;
 
 expect(release.project === 'jsray-vscode', 'version.json project must be jsray-vscode');
-expect(typeof version === 'string' && /^\d+\.\d+\.\d+-(internal|beta)\.\d+$|^\d+\.\d+\.\d+$/.test(version), `version.json has an unsupported version: ${version}`);
+expect(typeof version === 'string' && /^\d+\.\d+\.\d+-(?:internal\.\d+|beta(?:\.\d+)?)$|^\d+\.\d+\.\d+$/.test(version), `version.json has an unsupported version: ${version}`);
 expect(['internal', 'beta', 'stable'].includes(channel), `version.json has an unsupported channel: ${channel}`);
 
 if (channel === 'internal') {
@@ -27,7 +27,8 @@ if (channel === 'internal') {
 }
 
 if (channel === 'beta') {
-  expect(/-beta\.\d+$/.test(version), 'beta channel versions must end with -beta.N');
+  expect(/-beta(?:\.\d+)?$/.test(version),
+  'beta channel versions must end with -beta, optionally -beta.N');
   expect(release.publicBetaReleased === true, 'beta channel must set publicBetaReleased true');
 }
 

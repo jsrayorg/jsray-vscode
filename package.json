@@ -2,7 +2,7 @@
   "name": "jsray-vscode",
   "displayName": "JSRay",
   "description": "JSRay code rendering for VS Code: 8 color themes with six-family identifier separation, plus JSRay-powered Markdown preview highlighting.",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta",
   "publisher": "jsray",
   "author": "Jie <jie@jsray.org>",
   "license": "MIT",

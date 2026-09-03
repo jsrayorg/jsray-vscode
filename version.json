@@ -1,10 +1,10 @@
 {
   "project": "jsray-vscode",
   "name": "JSRay for VS Code",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta",
   "channel": "beta",
   "publicBetaReleased": true,
-  "nextPublicBeta": "0.0.1-beta.1",
+  "nextPublicBeta": "0.0.1-beta",
   "bundledCore": {
     "project": "jsray",
     "version": "0.0.2-beta.1"

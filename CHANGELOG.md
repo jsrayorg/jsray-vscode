@@ -9,7 +9,7 @@ versioning follows [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
-## [0.0.1-beta.1] — 2026-08-01
+## [0.0.1-beta] — 2026-08-01
 
 First public beta. The extension bundles a JSRay Core snapshot because a vsix
 has to work offline, and verifies that snapshot against the digests Core

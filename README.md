@@ -19,7 +19,7 @@
 
 > JSRay code rendering for VS Code · 8 color themes · JSRay-powered Markdown preview
 
-<sub>Public beta · not yet on the Marketplace · bundles a digest-verified JSRay Core snapshot</sub>
+<sub>Public beta · bundles a digest-verified JSRay Core snapshot</sub>
 
 ---
 
@@ -43,8 +43,6 @@ code --install-extension jsray-vscode-0.0.1-beta.vsix
 ```
 
 Or in VS Code: **Extensions** → the `…` menu → **Install from VSIX…**
-
-Not on the Marketplace or Open VSX yet.
 
 ### From source
 

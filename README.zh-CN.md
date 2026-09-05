@@ -19,7 +19,7 @@
 
 > 面向 VS Code 的 JSRay 代码渲染 · 8 款配色主题 · 由 JSRay 驱动的 Markdown 预览
 
-<sub>公开测试版 · 尚未上架 Marketplace · 内置经摘要校验的 JSRay Core 快照</sub>
+<sub>公开测试版 · 内置经摘要校验的 JSRay Core 快照</sub>
 
 ---
 
@@ -43,8 +43,6 @@ code --install-extension jsray-vscode-0.0.1-beta.vsix
 ```
 
 或者在 VS Code 里:**扩展** → `…` 菜单 → **从 VSIX 安装…**
-
-尚未上架 Marketplace 与 Open VSX。
 
 ### 从源码构建
 

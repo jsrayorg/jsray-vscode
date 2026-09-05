@@ -48,9 +48,35 @@ Themes are not authored here. Add the palette to Core's `themes/`, release it, t
 
 ## Versioning
 
-`version.json` and `package.json` must agree. The Marketplace does not accept prerelease
-suffixes, so `-internal.N` / `-beta.N` are stripped at publish time — the manifest keeps the
-full version until then.
+`version.json` and `package.json` must agree.
+
+### The ladder
+
+Each beta bumps the **patch**. There is no counter after `-beta`: a patch is never
+released twice, so a counter would carry no information — Core keeps one because its
+betas iterate within a patch, this does not.
+
+```
+0.0.1-beta → 0.0.2-beta → 0.0.3-beta → … → 0.1.0
+```
+
+`0.1.0` is the first stable release, and it is where this extension is listed on the
+Marketplace. The betas are not early drafts — they are a mature surface being walked
+through the problems that only show up in other people's editors. Until then the
+channel stays `beta`, and `0.0.1` is never released as a stable version: the ladder
+walks past it.
+
+The major stays `0` regardless: the ecosystem rule ties an integration's major to the
+Core it bundles, and Core is still `0.x`.
+
+### Why the listing waits
+
+The Marketplace does not accept prerelease suffixes, and this repository does not strip
+them at publish time. A version published as `0.0.1` while the repository only ever
+records `0.0.1-beta` cannot be traced back to a commit by the person who installed it —
+on the one channel where installing is a single click. So the Marketplace listing waits
+for `0.1.0`, which is where the ladder drops the suffix regardless. Until then the
+extension is installed from the `.vsix` attached to each GitHub release.
 
 ## Commit conventions
 

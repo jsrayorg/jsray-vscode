@@ -114,7 +114,7 @@
     "test": "node --test tests/*.mjs",
     "test:editor": "node tests/integration/run.mjs",
     "check:core": "node tools/check-core-freshness.mjs",
-    "test:packaged": "node tests/integration/run-packaged.mjs"
+    "test:packaged": "node tools/check-core-freshness.mjs --strict && node tests/integration/run-packaged.mjs"
   },
   "qna": "https://github.com/jsrayorg/jsray-vscode/issues",
   "galleryBanner": {

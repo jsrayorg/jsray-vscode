@@ -19,7 +19,7 @@
 
 > 面向 VS Code 的 JSRay 代码渲染 · 8 款配色主题 · 由 JSRay 驱动的 Markdown 预览
 
-<sub>公开测试版 · 尚未上架 Marketplace · 内置经摘要校验的 JSRay Core 快照</sub>
+<sub>公开测试版 · 内置经摘要校验的 JSRay Core 快照</sub>
 
 ---
 
@@ -35,14 +35,23 @@
 
 ## 安装
 
-在仓库根目录执行:
+从[最新 Release](https://github.com/jsrayorg/jsray-vscode/releases/latest)
+下载 `jsray-vscode-<版本>.vsix`,然后:
+
+```sh
+code --install-extension jsray-vscode-0.0.1-beta.vsix
+```
+
+或者在 VS Code 里:**扩展** → `…` 菜单 → **从 VSIX 安装…**
+
+### 从源码构建
 
 ```sh
 npx @vscode/vsce package   # 正式发布时版本号必须是纯 semver
 code --install-extension jsray-vscode-*.vsix
 ```
 
-开发方式:用 VS Code 打开本目录并按 `F5`(扩展开发宿主窗口)。
+或用 VS Code 打开本目录并按 `F5`(扩展开发宿主窗口)。
 
 然后通过 **首选项: 颜色主题** 选择 `JSRay …`,打开任意 Markdown 预览即可看到 JSRay 渲染效果。
 

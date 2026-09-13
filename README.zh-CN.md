@@ -12,9 +12,9 @@
 [English](README.md) · **简体中文**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.0.1--beta-blue)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.0.2--beta-blue)](CHANGELOG.md)
 [![Channel](https://img.shields.io/badge/channel-public%20beta-blue)](CHANGELOG.md)
-[![Core](https://img.shields.io/badge/JSRay%20Core-0.0.2--beta.1-success)](https://github.com/jsrayorg/jsray)
+[![Core](https://img.shields.io/badge/JSRay%20Core-0.0.2--beta.5-success)](https://github.com/jsrayorg/jsray)
 [![VS Code](https://img.shields.io/badge/VS%20Code-%E2%89%A5%201.75-007acc)](package.json)
 
 > 面向 VS Code 的 JSRay 代码渲染 · 8 款配色主题 · 由 JSRay 驱动的 Markdown 预览
@@ -39,7 +39,7 @@
 下载 `jsray-vscode-<版本>.vsix`,然后:
 
 ```sh
-code --install-extension jsray-vscode-0.0.1-beta.vsix
+code --install-extension jsray-vscode-0.0.2-beta.vsix
 ```
 
 或者在 VS Code 里:**扩展** → `…` 菜单 → **从 VSIX 安装…**

@@ -7,7 +7,7 @@
   "nextPublicBeta": "0.0.1-beta",
   "bundledCore": {
     "project": "jsray",
-    "version": "0.0.2-beta.1"
+    "version": "0.0.2-beta.5"
   },
   "notes": "Official open-source VS Code integration in the JSRay ecosystem. Ships editor color themes generated from JSRay palettes and a JSRay-powered Markdown preview renderer. The Marketplace rejects prerelease suffixes, so 0.0.1-beta cannot be uploaded as-is. Listing waits for 0.1.0, where the suffix comes off anyway, rather than stripping it at publish time: a published 0.0.1 that appears nowhere in this repository breaks the trace from an installed build back to a commit."
 }

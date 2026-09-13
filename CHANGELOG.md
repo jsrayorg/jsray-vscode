@@ -9,6 +9,39 @@ versioning follows [SemVer](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.0.2-beta] — 2026-09-13
+
+Bundles JSRay Core 0.0.2-beta.5, the last beta of Core's 0.0.2 line. Still a
+`.vsix` attached to the GitHub release: the Marketplace rejects a prerelease
+suffix, and listing waits for `0.1.0`.
+
+### Changed
+- **Bundled Core is 0.0.2-beta.5**, up from 0.0.2-beta.1 — which is what
+  0.0.1-beta shipped, although its entry below says 0.0.1-beta.4. In the
+  Markdown preview:
+  - A comment holding two quotes stays one comment, and a string holding `//`,
+    `#` or `/* */` stays one string, in every grammar. 27 grammars used to cut
+    a comment such as `// don't stop, won't stop` at its first apostrophe.
+  - Heredocs in PHP, shell and Ruby, Ruby's `%w[]` family, Perl's `q{}` family
+    and Elixir sigils render as literals instead of as code.
+  - A JavaScript template nested inside a placeholder no longer ends the outer
+    one early, and private class members such as `#count` are coloured.
+- **Core drift is reported, not failed on.** CI warns while the bundled Core is
+  behind the published one and stays green; the strict check lives in
+  `npm run test:packaged`, because an integration syncs Core when it releases,
+  not when Core does.
+- The sync workflow retires what a newer Core makes obsolete — its own issues
+  and `core/*` branches — instead of leaving one of each per Core release.
+- The publishing decision is written where the old plan was: the version is not
+  stripped of its suffix at publish time, because a Marketplace `0.0.1` that
+  appears nowhere in this repository cannot be traced back to a commit.
+- Install points at the `.vsix` on the release page, and every link names the
+  `jsrayorg` organisation.
+
+### Fixed
+- Commit subjects are checked here and on pull requests, not only in Core and
+  not only by the local hook.
+
 ## [0.0.1-beta] — 2026-08-01
 
 First public beta. The extension bundles a JSRay Core snapshot because a vsix

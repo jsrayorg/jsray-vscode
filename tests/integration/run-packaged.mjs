@@ -12,16 +12,15 @@
  * and launch an editor that has it as an ordinary installed extension.
  */
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, rmSync, existsSync } from 'node:fs';
+import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runTests, downloadAndUnzipVSCode } from '@vscode/test-electron';
+import { localVSCode, localVSCodeCLI } from './local-vscode.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const LOCAL_APP = '/Applications/Visual Studio Code.app';
-const LOCAL_ELECTRON = `${LOCAL_APP}/Contents/MacOS/Electron`;
-const LOCAL_CLI = `${LOCAL_APP}/Contents/Resources/app/bin/code`;
+const LOCAL_EXECUTABLE = localVSCode();
 
 const sandbox = mkdtempSync(join(tmpdir(), 'jsray-vsix-'));
 const vsix = join(sandbox, 'jsray.vsix');
@@ -37,8 +36,8 @@ try {
 
   // The CLI that installs has to be the same build that will run, or the
   // install lands in a profile the test never opens.
-  const cli = existsSync(LOCAL_CLI) ? LOCAL_CLI : null;
-  const electron = existsSync(LOCAL_ELECTRON) ? LOCAL_ELECTRON : await downloadAndUnzipVSCode();
+  const cli = localVSCodeCLI();
+  const electron = LOCAL_EXECUTABLE || await downloadAndUnzipVSCode();
 
   console.log('installing the package into a directory of its own…');
   run(cli || electron, [
@@ -54,7 +53,7 @@ try {
     // No extensionDevelopmentPath: the editor has to find the extension the
     // way it finds any other, from the extensions directory.
     extensionTestsPath: resolve(ROOT, 'tests/integration/suite.js'),
-    vscodeExecutablePath: existsSync(LOCAL_ELECTRON) ? LOCAL_ELECTRON : undefined,
+    vscodeExecutablePath: LOCAL_EXECUTABLE || undefined,
     launchArgs: [
       '--disable-gpu',
       '--extensions-dir', extensionsDir,
